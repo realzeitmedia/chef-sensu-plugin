@@ -1,16 +1,16 @@
 # sensu-plugin cookbook
 
-# Requirements
+## Requirements
 
 * `sensu`
 
-# Recipes
+## Recipes
 
 none
 
-# Resources
+## Resources
 
-## Define a handler using the mailer from the sensu-community plugins
+### Define a handler using the mailer from the sensu-community plugins
 
 ```ruby
 sensu_plugin_handler_mailer "something" do
@@ -21,7 +21,7 @@ sensu_plugin_handler_mailer "something" do
 end
 ```
 
-## Define a check using the check-http.rb plugin
+### Define a check using the check-http.rb plugin
 
 ```ruby
 sensu_plugin_check_http "http_check_website" do
@@ -37,7 +37,7 @@ sensu_plugin_check_http "http_check_website" do
 end
 ```
 
-## Define a check using the check-diskusage.rb plugin
+### Define a check using the check-diskusage.rb plugin
 
 ```ruby
 sensu_plugin_check_disk "disk-usage" do
@@ -48,12 +48,12 @@ sensu_plugin_check_disk "disk-usage" do
 end
 ```
 
-# Author and License
+## Author and License
 
 Author:: Christian Graf
 
 ```text
-Copyright 2014, realzeit GmbH
+Copyright 2014, realzeit GmbH (http://realzeitmedia.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
