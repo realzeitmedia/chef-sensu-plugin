@@ -12,12 +12,14 @@ class Chef
         @provider = Chef::Provider::SensuPluginPlugin
         @local_files = []
         @remote_files = []
+        @gems = []
         @action = :create
       end
 
       attr_reader :category
       attr_reader :remote_files
       attr_reader :local_files
+      attr_reader :gems
 
       set_attrib :command,     :kind_of => String
       set_attrib :handlers,    :kind_of => Array,   :default => ["default"], :required => true

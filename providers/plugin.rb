@@ -31,6 +31,12 @@ action :create do
     end
   end
 
+  new_resource.gems.each do |gem|
+    sensu_gem gem[:name] do
+      version gem[:version]
+    end
+  end
+
   file "#{node[:sensu][:directory]}/conf.d/#{new_resource.name}.json" do
     owner sensu_owner
     group sensu_group

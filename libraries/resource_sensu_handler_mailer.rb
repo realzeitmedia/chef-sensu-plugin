@@ -9,6 +9,7 @@ class Chef
         @handler_type = "pipe"
         super
         @remote_files << {name: "mailer.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/handlers/notification/mailer.rb"}
+        @gems += [{name: "mail", version: "2.5.4"}, {name: "timeout"}]
         @cmd_name = "mailer.rb"
       end
 
