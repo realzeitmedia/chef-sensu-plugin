@@ -8,7 +8,7 @@ class Chef
         @check_type = "dir-count"
         super
         @remote_files << {name: "check-dir-count.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/files/check_dir_count.rb"}
-        @cmd_name = "check-dir-count"
+        @cmd_name = "check-dir-count.rb"
       end
 
       set_attrib :directory, :cmd_flag => '-d', :kind_of => String
