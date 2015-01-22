@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckRedisMemory < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "redis-memory"
         super
         @remote_files << {name: "check-redis-memory.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/redis/check-redis-memory.rb"}
         @cmd_name = "check-redis-memory.rb"

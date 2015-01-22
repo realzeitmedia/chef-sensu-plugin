@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckDiskFail < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "disk-fail"
         super
         @remote_files << {name: "check-disk-fail.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-disk-fail.rb"}
         @cmd_name = "check-disk-fail.rb"

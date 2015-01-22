@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckGraphiteStats < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "stats"
         super
         @remote_files << {name: "check-graphite-stats.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/graphite/check-stats.rb"}
         @cmd_name = "check-graphite-stats.rb"
