@@ -48,6 +48,14 @@ sensu_plugin_check_disk "disk-usage" do
 end
 ```
 
+### Define a metric using the vmstat-metrics.rb plugin
+
+```ruby
+sensu_plugin_metric_vmstat "vmstat" do
+  handlers ["graphite"]
+end
+```
+
 ## Author and License
 
 Author:: Christian Graf
