@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckRabbitmqAlive < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "rabbitmq-alive"
         super
         @remote_files << {name: "check-rabbitmq-alive.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/rabbitmq/rabbitmq-alive.rb"}
         @cmd_name = "check-rabbitmq-alive.rb"

@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckLoad < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "load"
         super
         @remote_files << {name: "check-load.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-load.rb"}
         @cmd_name = "check-load.rb"

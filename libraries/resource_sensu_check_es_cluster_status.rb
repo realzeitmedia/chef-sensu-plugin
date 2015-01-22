@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckEsClusterStatus < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "es-cluster-status"
         super
         @remote_files << {name: "check-es-cluster-status.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/elasticsearch/check-es-cluster-status.rb"}
         @cmd_name = "check-es-cluster-status.rb"

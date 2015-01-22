@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckDisk < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "disk"
         super
         @remote_files << {name: "check-disk.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-disk.rb"}
         @cmd_name = "check-disk.rb"

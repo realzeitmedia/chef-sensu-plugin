@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckHttp < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "http"
         super
         @remote_files << {name: "check-http.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/http/check-http.rb"}
         @cmd_name = "check-http.rb"
