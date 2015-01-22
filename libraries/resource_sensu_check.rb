@@ -31,7 +31,6 @@ class Chef
       set_attrib :standalone,  :kind_of => [TrueClass, FalseClass]
 
       def get_sensu_config
-        puts get_attribs
         config = { 'checks' => { name => {} } }
 
         config['checks'][name] = (get_attribs - get_cmd_attribs).inject({}) { |hsh, key| hsh[key] = self.send(key); hsh }
