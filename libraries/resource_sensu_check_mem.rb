@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckMem < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "mem"
         super
         @remote_files << {name: "check-mem.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-mem.rb"}
         @cmd_name = "check-mem.rb"

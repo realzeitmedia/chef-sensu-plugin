@@ -5,7 +5,6 @@ class Chef
     class SensuPluginCheckDirCount < Chef::Resource::SensuPluginCheckGeneric
 
       def initialize(name, run_context=nil)
-        @check_type = "dir-count"
         super
         @remote_files << {name: "check-dir-count.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/files/check_dir_count.rb"}
         @cmd_name = "check-dir-count"
