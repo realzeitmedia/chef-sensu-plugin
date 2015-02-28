@@ -30,8 +30,8 @@ class Chef
 
       def get_sensu_config
         config = { 'handlers' => { name => {} } }
-        config['handlers'][name] = get_attribs.inject({}) { |hsh, key| hsh[key] = self.send(key); hsh }
-        config['handlers'][name]['command']     = get_attribs.include?(:command) ? command : "#{@cmd_name}#{get_cmd_attribs.map{ |x| get_cmd_attrib x}.join""}"
+        config['handlers'][name] = (get_attribs - get_cmd_attribs - get_ext_attribs).inject({}) { |hsh, key| hsh[key] = self.send(key); hsh }
+        config['handlers'][name]['command'] = get_attribs.include?(:command) ? command : "#{@cmd_name}#{get_cmd_attribs.map{ |x| get_cmd_attrib x}.join""}"
         config['handlers'][name]['type']    = handler_type
         config
       end

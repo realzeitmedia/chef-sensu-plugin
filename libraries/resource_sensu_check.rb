@@ -33,7 +33,7 @@ class Chef
       def get_sensu_config
         config = { 'checks' => { name => {} } }
 
-        config['checks'][name] = (get_attribs - get_cmd_attribs).inject({}) { |hsh, key| hsh[key] = self.send(key); hsh }
+        config['checks'][name] = (get_attribs - get_cmd_attribs - get_ext_attribs).inject({}) { |hsh, key| hsh[key] = self.send(key); hsh }
         config['checks'][name]['command'] = get_attribs.include?(:command) ? command : "#{@cmd_name}#{get_cmd_attribs.map{ |x| get_cmd_attrib x}.join""}"
         config
       end

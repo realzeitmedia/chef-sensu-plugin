@@ -9,10 +9,13 @@ class Chef
       class << self
         attr_accessor :required_attribs
         attr_accessor :cmd_flags
+        attr_accessor :ext_attribs
 
-        def inherit_attributes(attrs)
+        def inherit_attributes(ra, ea)
           @required_attribs ||= []
-          @required_attribs.concat attrs
+          @required_attribs.concat ra
+          @ext_attribs ||= []
+          @ext_attribs.concat ea
         end
 
         def inherit_flags(flags)
@@ -21,12 +24,13 @@ class Chef
         end
 
         def inherited(subclass)
-          subclass.inherit_attributes(@required_attribs)
+          subclass.inherit_attributes(@required_attribs, @ext_attribs)
           subclass.inherit_flags(@cmd_flags)
         end
       end
 
       @required_attribs = []
+      @ext_attribs = []
       @cmd_flags = {}
 
       def initialize(name, run_context=nil)
@@ -63,6 +67,12 @@ class Chef
         cmd_attribs
       end
 
+      def get_ext_attribs
+        ext_attribs = []
+        get_attribs.each { |attrib| ext_attribs << attrib if self.class.ext_attribs.include?(attrib) }
+        ext_attribs
+      end
+
       def get_cmd_attrib(attrib)
         return "" unless get_attribs.include? attrib
 
@@ -87,6 +97,11 @@ class Chef
 
         if validation_opts.has_key? :cmd_flag
           @cmd_flags[attr_name.to_sym] = validation_opts.delete :cmd_flag
+        end
+
+        if validation_opts.has_key? :ext_config
+          @ext_attribs << attr_name.to_sym
+          validation_opts.delete :ext_config
         end
 
         class_eval(<<-SHIM, __FILE__, __LINE__)
