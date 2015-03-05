@@ -14,7 +14,7 @@ class Chef
         @local_files = []
         @remote_files = []
         @gems = []
-        @action = :create
+        @action = :enable
       end
 
       attr_reader :category

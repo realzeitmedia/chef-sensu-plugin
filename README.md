@@ -23,6 +23,14 @@ end
 
 ### Define a check using the check-http.rb plugin
 
+Each check now supports the two actions *create* (which is the default) and *enable*. You can simply use the *create* action to install the check-script on the client 
+
+```ruby
+sensu_plugin_check_http "http_check"
+```
+
+In order to install the check definition on the server you need to use the *enable* action:
+
 ```ruby
 sensu_plugin_check_http "http_check_website" do
   handlers ["mailer"]
@@ -34,6 +42,7 @@ sensu_plugin_check_http "http_check_website" do
   ssl true
   insecure true
   subscribers ["webservers"]
+  action :enable
 end
 ```
 
@@ -45,6 +54,7 @@ sensu_plugin_check_disk "disk-usage" do
   warn 85
   crit 90
   subscribers ["all"]
+  action :enable
 end
 ```
 
@@ -53,6 +63,7 @@ end
 ```ruby
 sensu_plugin_metric_vmstat "vmstat" do
   handlers ["graphite"]
+  action :enable
 end
 ```
 
