@@ -10,9 +10,10 @@ class Chef
         @cmd_name = "check-dir-count.rb"
       end
 
-      set_attrib :directory, :cmd_flag => '-d', :kind_of => String
-      set_attrib :warn,      :cmd_flag => '-w', :kind_of => Integer
-      set_attrib :crit,      :cmd_flag => '-c', :kind_of => Integer
+      set_attrib :directory,    :cmd_flag => '-d', :kind_of => String
+      set_attrib :file_pattern, :cmd_flag => '-p', :kind_of => String
+      set_attrib :warn,         :cmd_flag => '-w', :kind_of => Integer
+      set_attrib :crit,         :cmd_flag => '-c', :kind_of => Integer
 
     end
   end
