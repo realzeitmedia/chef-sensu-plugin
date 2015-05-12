@@ -29,6 +29,7 @@ class Chef
       set_attrib :refresh,     :kind_of => Integer
       set_attrib :subscribers, :kind_of => Array
       set_attrib :interval,    :kind_of => Integer, :default => 300, :required => true
+      set_attrib :timeout,     :kind_of => Integer
       set_attrib :standalone,  :kind_of => [TrueClass, FalseClass]
 
       def get_sensu_config
