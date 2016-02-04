@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-mem.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-mem.rb"}
-        @cmd_name = "check-mem.rb"
+        @cmd_name = "check-mem.sh"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
       set_attrib :warn,    :cmd_flag => '-w', :kind_of => String

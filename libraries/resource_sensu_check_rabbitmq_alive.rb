@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-rabbitmq-alive.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/rabbitmq/rabbitmq-alive.rb"}
         @cmd_name = "check-rabbitmq-alive.rb"
+        @local_files << {name: @cmd_name, source: "checks/rabbitmq-alive.rb"}
       end
 
       set_attrib :host,     :cmd_flag => '-w', :kind_of => String

@@ -8,9 +8,9 @@ class Chef
         @handler_name = "mailer"
         @handler_type = "pipe"
         super
-        @remote_files << {name: "mailer.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/handlers/notification/mailer.rb"}
-        @gems += [{name: "mail", version: "2.5.4"}, {name: "timeout"}]
         @cmd_name = "mailer.rb"
+        @local_files << {name: @cmd_name, source: "handlers/#{@cmd_name}"}
+        @gems += [{name: "mail", version: "2.5.4"}, {name: "timeout"}]
       end
 
       set_attrib :json_config,               :kind_of => String,  :cmd_flag => "-j", :default => 'mailer'

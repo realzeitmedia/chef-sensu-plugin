@@ -7,7 +7,7 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @cmd_name = "metric-dirsize.rb"
-        @remote_files << {name: @cmd_name, source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/files/metric-dirsize.rb"}
+        @local_files << {name: @cmd_name, source: "metrics/#{@cmd_name}"}
       end
 
       set_attrib :directory, :cmd_flag => '-d', :kind_of => String, :required => true
