@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-dir-count.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/files/check_dir_count.rb"}
         @cmd_name = "check-dir-count.rb"
+        @local_files << {name: @cmd_name, source: "checks/check_dir_count.rb"}
       end
 
       set_attrib :directory,    :cmd_flag => '-d', :kind_of => String

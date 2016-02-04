@@ -19,6 +19,7 @@ def install(base_dir, sensu_owner, sensu_group)
 
   new_resource.local_files.each do |file|
     cookbook_file "#{base_dir}/#{file[:name]}" do
+      cookbook new_resource.cookbook
       source file[:source]
       owner sensu_owner
       group sensu_group

@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-disk.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-disk.rb"}
         @cmd_name = "check-disk.rb"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
       set_attrib :fstype,      :cmd_flag => '-t', :kind_of => String

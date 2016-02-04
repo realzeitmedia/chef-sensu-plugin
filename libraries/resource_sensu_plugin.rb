@@ -36,8 +36,13 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @allowed_actions = [:create, :nothing]
+        @cookbook = 'sensu-plugin'
         # Save all attributes that have actually been called in the recipe
         @attribs = []
+      end
+
+      def cookbook(arg=nil)
+        set_or_return(:cookbook, arg, :kind_of => String)
       end
 
       #attr_reader :attribs

@@ -7,7 +7,7 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @cmd_name = "metrics-curl.rb"
-        @remote_files << {name: @cmd_name, source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/http/metrics-curl.rb"}
+        @local_files << {name: @cmd_name, source: "metrics/#{@cmd_name}"}
       end
 
       set_attrib :url,       :cmd_flag => '-u', :kind_of => String

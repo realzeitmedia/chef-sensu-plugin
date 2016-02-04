@@ -7,7 +7,7 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @cmd_name = "vmstat-metrics.rb"
-        @remote_files << {name: @cmd_name, source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/vmstat-metrics.rb"}
+        @local_files << {name: @cmd_name, source: "metrics/#{@cmd_name}"}
       end
 
       set_attrib :scheme, :cmd_flag => '--scheme', :kind_of => String, :default => "stats.:::name:::", :required => true

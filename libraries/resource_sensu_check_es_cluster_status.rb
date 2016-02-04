@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-es-cluster-status.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/elasticsearch/check-es-cluster-status.rb"}
         @cmd_name = "check-es-cluster-status.rb"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
       set_attrib :host,        :cmd_flag => '-h', :kind_of =>String

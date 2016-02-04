@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-http.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/http/check-http.rb"}
         @cmd_name = "check-http.rb"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
       set_attrib :ua,             :cmd_flag => '-x', :kind_of => String

@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-disk-health.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/plugins/system/check-disk-health.rb"}
-        @cmd_name = "check-disk-health.rb"
+        @cmd_name = "check-disk-health.sh"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
     end

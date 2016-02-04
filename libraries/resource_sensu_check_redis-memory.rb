@@ -6,8 +6,8 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        @remote_files << {name: "check-redis-memory.rb", source: "https://github.com/sensu/sensu-community-plugins/raw/master/plugins/redis/check-redis-memory.rb"}
         @cmd_name = "check-redis-memory.rb"
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
       set_attrib :host,      :cmd_flag => '-h', :kind_of => String

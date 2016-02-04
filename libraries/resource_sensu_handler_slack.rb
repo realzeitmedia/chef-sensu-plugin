@@ -8,8 +8,8 @@ class Chef
         @handler_name = "slack"
         @handler_type = "pipe"
         super
-        @remote_files << {name: "slack.rb", source: "https://raw.githubusercontent.com/sensu/sensu-community-plugins/master/handlers/notification/slack.rb"}
         @cmd_name = "slack.rb"
+        @local_files << {name: @cmd_name, source: "handlers/#{@cmd_name}"}
       end
 
       set_attrib :json_config,      :kind_of => String,  :cmd_flag => "-j", :default => 'slack'
