@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginHandlerSlack < Chef::Resource::SensuPluginHandlerGeneric
+      provides :sensu_plugin_handler_slack
 
       def initialize(name, run_context=nil)
         @handler_name = "slack"

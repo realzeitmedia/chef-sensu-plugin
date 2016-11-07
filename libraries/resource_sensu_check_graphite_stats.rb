@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginCheckGraphiteStats < Chef::Resource::SensuPluginCheckGeneric
+      provides :sensu_plugin_check_graphite_stats
 
       def initialize(name, run_context=nil)
         super

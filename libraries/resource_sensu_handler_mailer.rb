@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginHandlerMailer < Chef::Resource::SensuPluginHandlerGeneric
+      provides :sensu_plugin_handler_mailer
 
       def initialize(name, run_context=nil)
         @handler_name = "mailer"

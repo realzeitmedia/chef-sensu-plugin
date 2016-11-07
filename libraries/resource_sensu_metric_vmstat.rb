@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginMetricVmstat < Chef::Resource::SensuPluginMetricGeneric
+      provides :sensu_plugin_metric_vmstat
 
       def initialize(name, run_context=nil)
         super

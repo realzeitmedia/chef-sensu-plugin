@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginCheckDisk < Chef::Resource::SensuPluginCheckGeneric
+      provides :sensu_plugin_check_disk
 
       def initialize(name, run_context=nil)
         super

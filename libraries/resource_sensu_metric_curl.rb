@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginMetricCurl < Chef::Resource::SensuPluginMetricGeneric
+      provides :sensu_plugin_metric_curl
 
       def initialize(name, run_context=nil)
         super

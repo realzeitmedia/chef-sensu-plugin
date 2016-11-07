@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginCheckPostgresAlive < Chef::Resource::SensuPluginCheckGeneric
+      provides :sensu_plugin_check_postgres_alive
 
       def initialize(name, run_context=nil)
         super

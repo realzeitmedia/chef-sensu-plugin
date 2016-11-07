@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginMetricDirsize < Chef::Resource::SensuPluginMetricGeneric
+      provides :sensu_plugin_metric_dirsize
 
       def initialize(name, run_context=nil)
         super

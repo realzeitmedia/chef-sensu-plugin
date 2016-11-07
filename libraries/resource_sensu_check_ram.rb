@@ -3,6 +3,7 @@ require "chef/resource"
 class Chef
   class Resource
     class SensuPluginCheckRam < Chef::Resource::SensuPluginCheckGeneric
+      provides :sensu_plugin_check_ram
 
       def initialize(name, run_context=nil)
         super
