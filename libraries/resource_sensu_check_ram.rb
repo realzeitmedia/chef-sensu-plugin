@@ -12,6 +12,8 @@ class Chef
       end
 
       set_attrib :megabytes, :cmd_flag => '-m'
+      set_attrib :free,      :cmd_flag => '-f'
+      set_attrib :used,      :cmd_flag => '-u'
       set_attrib :warn,      :cmd_flag => '-w', :kind_of => Integer
       set_attrib :crit,      :cmd_flag => '-c', :kind_of => Integer
 

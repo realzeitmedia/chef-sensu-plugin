@@ -13,24 +13,47 @@
 #
 # DEPENDENCIES:
 #   gem: sensu-plugin
+#   gem: vmstat
+#   compiler: gcc
 #
 # USAGE:
+#   check-ram.rb --help
 #
+# EXTRA INSTALL INSTRUCTIONS:
+#   You must install gcc. This is needed to compile the vmstat gem
+#   which you must put in a path that sensu can reach. See the README for
+#   more details.
 # NOTES:
+#   The default behavior is to check % of RAM free. This can easily
+#   be overwritten via args please see `check-ram.rb --help` for details
+#   on each option.
 #
 # LICENSE:
 #   Copyright 2012 Sonian, Inc <chefs@sonian.net>
 #   Released under the same terms as Sensu (the MIT license); see LICENSE
 #   for details.
 #
-require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
 class CheckRAM < Sensu::Plugin::Check::CLI
   option :megabytes,
          short: '-m',
          long: '--megabytes',
-         description: 'Unless --megabytes is specified the thresholds are in percents',
+         description: 'Unless --megabytes is specified the thresholds are in percentage of memory used as opposed to MB of ram left',
+         boolean: true,
+         default: false
+
+  option :free,
+         short: '-f',
+         long: '--free',
+         description: 'checks free threshold, defaults to true',
+         boolean: true,
+         default: true
+
+  option :used,
+         short: '-u',
+         long: '--used',
+         description: 'checks used threshold, defaults to false',
          boolean: true,
          default: false
 
@@ -45,35 +68,57 @@ class CheckRAM < Sensu::Plugin::Check::CLI
          default: 5
 
   def run
-    memhash = {}
-    meminfo = File.read('/proc/meminfo')
-    meminfo.each_line do |i|
-      key, val = i.split(':')
-      val = val.include?('kB') ? val.gsub(/\s+kB/, '') : val
-      memhash["#{key}"] = val.strip
+    begin
+      require 'vmstat'
+    rescue LoadError => e
+      raise unless e.message =~ /vmstat/
+      unknown "Error unable to load vmstat gem: #{e}"
     end
 
-    total_ram = (memhash['MemTotal'].to_i << 10) >> 20
-    if memhash.key?('MemAvailable')
-      free_ram = (memhash['MemAvailable'].to_i << 10) >> 20
-    else
-      free_ram = ((memhash['MemFree'].to_i + memhash['Buffers'].to_i + memhash['Cached'].to_i) << 10) >> 20
+    # calculating free and used ram based on: https://github.com/threez/ruby-vmstat/issues/4 to emulate free -m
+    mem = Vmstat.snapshot.memory
+    free_ram = mem.inactive_bytes + mem.free_bytes
+    used_ram = mem.wired_bytes + mem.active_bytes
+    total_ram = mem.total_bytes
+
+    # only free or used should be defined, change defaults to mirror free
+    if config[:used]
+      config[:free] = false
     end
 
     if config[:megabytes]
-      message "#{free_ram} megabytes free RAM left"
-
-      critical if free_ram < config[:crit]
-      warning if free_ram < config[:warn]
-      ok
+      # free_ram is returned in Bytes. see: https://github.com/threez/ruby-vmstat/blob/master/lib/vmstat/memory.rb
+      free_ram /= 1024 * 1024
+      used_ram /= 1024 * 1024
+      total_ram /= 1024 * 1024
+      if config[:free]
+        ram = free_ram
+        message "#{ram} megabytes of RAM left"
+      # return used ram
+      elsif config[:used]
+        ram = used_ram
+        message "#{ram} megabytes of RAM used"
+      end
+    # use percentages
     else
       unknown 'invalid percentage' if config[:crit] > 100 || config[:warn] > 100
 
-      percents_left = free_ram * 100 / total_ram
-      message "#{percents_left}% free RAM left"
-
-      critical if percents_left < config[:crit]
-      warning if percents_left < config[:warn]
+      if config[:free]
+        ram = (free_ram / total_ram.to_f * 100).round(2)
+        message "#{ram}% RAM free"
+      elsif config[:used]
+        ram = (used_ram / total_ram.to_f * 100).round(2)
+        message "#{ram}% RAM used"
+      end
+    end
+    # determine state
+    if config[:free]
+      critical if ram <= config[:crit]
+      warning if ram <= config[:warn]
+      ok
+    elsif config[:used]
+      critical if ram >= config[:crit]
+      warning if ram >= config[:warn]
       ok
     end
   end
