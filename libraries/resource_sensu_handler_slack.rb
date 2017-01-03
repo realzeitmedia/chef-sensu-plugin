@@ -9,17 +9,27 @@ class Chef
         @handler_name = "slack"
         @handler_type = "pipe"
         super
-        @cmd_name = "slack.rb"
+        @cmd_name = "handler-slack.rb"
         @local_files << {name: @cmd_name, source: "handlers/#{@cmd_name}"}
       end
 
       set_attrib :json_config,      :kind_of => String,  :cmd_flag => "-j", :default => 'slack'
+      set_attrib :payload_template, :kind_of => String,  :ext_config => true
       set_attrib :webhook_url,      :kind_of => String,  :ext_config => true
+      set_attrib :icon_emoji,       :kind_of => String,  :ext_config => true
+      set_attrib :icon_url,         :kind_of => String,  :ext_config => true
       set_attrib :channel,          :kind_of => String,  :ext_config => true
       set_attrib :message_prefix,   :kind_of => String,  :ext_config => true
       set_attrib :bot_name,         :kind_of => String,  :ext_config => true
       set_attrib :surround,         :kind_of => String,  :ext_config => true
       set_attrib :markdown_enabled, :kind_of => [TrueClass, FalseClass],  :ext_config => true
+      set_attrib :link_names,       :kind_of => [TrueClass, FalseClass],  :ext_config => true
+      set_attrib :template,         :kind_of => String,  :ext_config => true
+      set_attrib :fields,           :kind_of => String,  :ext_config => true
+      set_attrib :proxy_address,    :kind_of => String,  :ext_config => true
+      set_attrib :proxy_port,       :kind_of => String,  :ext_config => true
+      set_attrib :proxy_username,   :kind_of => String,  :ext_config => true
+      set_attrib :proxy_password,   :kind_of => String,  :ext_config => true
 
       def get_sensu_config
         config = { 'handlers' => { name => {} } }
