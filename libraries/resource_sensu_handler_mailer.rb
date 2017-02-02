@@ -9,16 +9,19 @@ class Chef
         @handler_name = "mailer"
         @handler_type = "pipe"
         super
-        @cmd_name = "mailer.rb"
+        @cmd_name = "handler-mailer.rb"
         @local_files << {name: @cmd_name, source: "handlers/#{@cmd_name}"}
         @gems += [{name: "mail", version: "2.5.4"}, {name: "timeout"}]
       end
 
       set_attrib :json_config,               :kind_of => String,  :cmd_flag => "-j", :default => 'mailer'
-      set_attrib :admin_gui,                 :kind_of => String
+      set_attrib :template,                  :kind_of => String,  :cmd_flag => "-t"
+      set_attrib :content_type,              :kind_of => String,  :cmd_flag => "-c"
+      set_attrib :subject_prefix,            :kind_of => String,  :cmd_flag => "-s"
+      set_attrib :admin_gui,                 :kind_of => String,  :ext_config => true
       set_attrib :mail_from,                 :kind_of => String,  :ext_config => true
       set_attrib :mail_to,                   :kind_of => String,  :ext_config => true
-      set_attrib :subscriptions,             :kind_of => Hash
+      set_attrib :reply_to,                  :kind_of => String,  :ext_config => true
       set_attrib :delivery_method,           :kind_of => String,  :ext_config => true
       set_attrib :smtp_address,              :kind_of => String,  :ext_config => true
       set_attrib :smtp_port,                 :kind_of => Integer, :ext_config => true
@@ -26,7 +29,9 @@ class Chef
       set_attrib :smtp_username,             :kind_of => String,  :ext_config => true
       set_attrib :smtp_password,             :kind_of => String,  :ext_config => true
       set_attrib :smtp_authentication,       :kind_of => String,  :ext_config => true
+      set_attrib :smtp_use_tls,              :kind_of => [TrueClass, FalseClass], :ext_config => true
       set_attrib :smtp_enable_starttls_auto, :kind_of => [TrueClass, FalseClass], :ext_config => true
+      set_attrib :timeout,                   :kind_of => Integer, :ext_config => true
 
       def get_sensu_config
         config = { 'handlers' => { name => {} } }

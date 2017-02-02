@@ -8,15 +8,16 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @cmd_name = "check-rabbitmq-alive.rb"
-        @local_files << {name: @cmd_name, source: "checks/rabbitmq-alive.rb"}
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
-      set_attrib :host,     :cmd_flag => '-w', :kind_of => String
-      set_attrib :vhost,    :cmd_flag => '-v', :kind_of => String
-      set_attrib :username, :cmd_flag => '-u', :kind_of => String
-      set_attrib :password, :cmd_flag => '-p', :kind_of => String
-      set_attrib :port,     :cmd_flag => '-P', :kind_of => String
-      set_attrib :ssl,      :cmd_flag => '--ssl', :kind_of => String
+      set_attrib :host,           :cmd_flag => '-w', :kind_of => String
+      set_attrib :vhost,          :cmd_flag => '-v', :kind_of => String
+      set_attrib :username,       :cmd_flag => '-u', :kind_of => String
+      set_attrib :password,       :cmd_flag => '-p', :kind_of => String
+      set_attrib :port,           :cmd_flag => '-P', :kind_of => String
+      set_attrib :ssl,            :cmd_flag => '--ssl'
+      set_attrib :verify_ssl_off, :cmd_flag => '--verify_ssl_off'
 
     end
   end

@@ -27,11 +27,14 @@
 #   for details.
 #
 
-require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 require 'rest-client'
 require 'json'
+require 'base64'
 
+#
+# ES Cluster Status
+#
 class ESClusterStatus < Sensu::Plugin::Check::CLI
   option :host,
          description: 'Elasticsearch host',
@@ -59,13 +62,48 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
          proc: proc(&:to_i),
          default: 30
 
+  option :status_timeout,
+         description: 'Sets the time to wait for the cluster status to be green',
+         short: '-T SECS',
+         long: '--status_timeout SECS',
+         proc: proc(&:to_i)
+
+  option :user,
+         description: 'Elasticsearch User',
+         short: '-u USER',
+         long: '--user USER'
+
+  option :password,
+         description: 'Elasticsearch Password',
+         short: '-P PASS',
+         long: '--password PASS'
+
+  option :https,
+         description: 'Enables HTTPS',
+         short: '-e',
+         long: '--https'
+
   def get_es_resource(resource)
-    r = RestClient::Resource.new("http://#{config[:host]}:#{config[:port]}/#{resource}", timeout: config[:timeout])
+    headers = {}
+    if config[:user] && config[:password]
+      auth = 'Basic ' + Base64.encode64("#{config[:user]}:#{config[:password]}").chomp
+      headers = { 'Authorization' => auth }
+    end
+
+    protocol = if config[:https]
+                 'https'
+               else
+                 'http'
+               end
+
+    r = RestClient::Resource.new("#{protocol}://#{config[:host]}:#{config[:port]}#{resource}", timeout: config[:timeout], headers: headers)
     JSON.parse(r.get)
   rescue Errno::ECONNREFUSED
     critical 'Connection refused'
   rescue RestClient::RequestTimeout
     critical 'Connection timed out'
+  rescue RestClient::ServiceUnavailable
+    critical 'Service is unavailable'
   rescue Errno::ECONNRESET
     critical 'Connection reset by peer'
   end
@@ -77,7 +115,7 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
 
   def master?
     if Gem::Version.new(acquire_es_version) >= Gem::Version.new('1.0.0')
-      master = get_es_resource('_cluster/state/master_node')['master_node']
+      master = get_es_resource('/_cluster/state/master_node')['master_node']
       local = get_es_resource('/_nodes/_local')
     else
       master = get_es_resource('/_cluster/state?filter_routing_table=true&filter_metadata=true&filter_indices=true')['master_node']
@@ -87,7 +125,11 @@ class ESClusterStatus < Sensu::Plugin::Check::CLI
   end
 
   def acquire_status
-    health = get_es_resource('/_cluster/health')
+    health = if config[:status_timeout]
+               get_es_resource("/_cluster/health?wait_for_status=green&timeout=#{config[:status_timeout]}s")
+             else
+               get_es_resource('/_cluster/health')
+             end
     health['status'].downcase
   end
 

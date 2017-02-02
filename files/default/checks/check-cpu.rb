@@ -25,10 +25,14 @@
 #   for details.
 #
 
-require 'rubygems' if RUBY_VERSION < '1.9.0'
 require 'sensu-plugin/check/cli'
 
+#
+# Check CPU
+#
 class CheckCPU < Sensu::Plugin::Check::CLI
+  CPU_METRICS = [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest, :guest_nice].freeze
+
   option :warn,
          short: '-w WARN',
          proc: proc(&:to_f),
@@ -44,7 +48,18 @@ class CheckCPU < Sensu::Plugin::Check::CLI
          proc: proc(&:to_f),
          default: 1
 
-  [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest].each do |metric|
+  option :proc_path,
+         long: '--proc-path /proc',
+         proc: proc(&:to_f),
+         default: '/proc'
+
+  option :idle_metrics,
+         long: '--idle-metrics METRICS',
+         description: 'Treat the specified metrics as idle. Defaults to idle,iowait,steal,guest,guest_nice',
+         proc: proc { |x| x.split(/,/).map { |y| y.strip.to_sym } },
+         default: [:idle, :iowait, :steal, :guest, :guest_nice]
+
+  CPU_METRICS.each do |metric|
     option metric,
            long: "--#{metric}",
            description: "Check cpu #{metric} instead of total cpu usage",
@@ -53,22 +68,20 @@ class CheckCPU < Sensu::Plugin::Check::CLI
   end
 
   def acquire_cpu_stats
-    File.open('/proc/stat', 'r').each_line do |line|
+    File.open("#{config[:proc_path]}/stat", 'r').each_line do |line|
       info = line.split(/\s+/)
       name = info.shift
-      return info.map(&:to_f) if name.match(/^cpu$/)
+      return info.map(&:to_f) if name =~ /^cpu$/
     end
   end
 
   def run
-    metrics = [:user, :nice, :system, :idle, :iowait, :irq, :softirq, :steal, :guest]
-
     cpu_stats_before = acquire_cpu_stats
     sleep config[:sleep]
     cpu_stats_after = acquire_cpu_stats
 
-    # Some kernels don't have a 'guest' value (RHEL5).
-    metrics = metrics.slice(0, cpu_stats_after.length)
+    # Some kernels don't have 'guest' and 'guest_nice' values
+    metrics = CPU_METRICS.slice(0, cpu_stats_after.length)
 
     cpu_total_diff = 0.to_f
     cpu_stats_diff = []
@@ -82,7 +95,9 @@ class CheckCPU < Sensu::Plugin::Check::CLI
       cpu_stats[i] = 100 * (cpu_stats_diff[i] / cpu_total_diff)
     end
 
-    cpu_usage = 100 * (cpu_total_diff - cpu_stats_diff[3]) / cpu_total_diff
+    idle_diff = metrics.each_with_index.map { |metric, i| config[:idle_metrics].include?(metric) ? cpu_stats_diff[i] : 0.0 }.reduce(0.0, :+)
+
+    cpu_usage = 100 * (cpu_total_diff - idle_diff) / cpu_total_diff
     checked_usage = cpu_usage
 
     self.class.check_name 'CheckCPU TOTAL'
@@ -98,8 +113,8 @@ class CheckCPU < Sensu::Plugin::Check::CLI
 
     message msg
 
-    critical if checked_usage > config[:crit]
-    warning if checked_usage > config[:warn]
+    critical if checked_usage >= config[:crit]
+    warning if checked_usage >= config[:warn]
     ok
   end
 end

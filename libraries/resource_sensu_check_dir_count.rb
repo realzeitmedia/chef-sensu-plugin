@@ -8,13 +8,12 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @cmd_name = "check-dir-count.rb"
-        @local_files << {name: @cmd_name, source: "checks/check_dir_count.rb"}
+        @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
       end
 
-      set_attrib :directory,    :cmd_flag => '-d', :kind_of => String
-      set_attrib :file_pattern, :cmd_flag => '-p', :kind_of => String
-      set_attrib :warn,         :cmd_flag => '-w', :kind_of => Integer
-      set_attrib :crit,         :cmd_flag => '-c', :kind_of => Integer
+      set_attrib :directory,    :cmd_flag => '-d', :kind_of => String,  :required => true
+      set_attrib :warn,         :cmd_flag => '-w', :kind_of => Integer, :required => true
+      set_attrib :crit,         :cmd_flag => '-c', :kind_of => Integer, :required => true
 
     end
   end

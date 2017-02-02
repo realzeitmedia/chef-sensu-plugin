@@ -14,8 +14,8 @@ class Chef
       set_attrib :host,      :cmd_flag => '-h', :kind_of => String
       set_attrib :port,      :cmd_flag => '-p', :kind_of => String
       set_attrib :password,  :cmd_flag => '-P', :kind_of => String
-      set_attrib :warn_mem,  :cmd_flag => '-w', :kind_of => String, :required => true
-      set_attrib :crit_mem,  :cmd_flag => '-c', :kind_of => String, :required => true
+      set_attrib :warn_mem,  :cmd_flag => '-w', :kind_of => Integer, :required => true
+      set_attrib :crit_mem,  :cmd_flag => '-c', :kind_of => Integer, :required => true
       set_attrib :crit_conn, :cmd_flag => '--crit-conn-failure'
 
     end

@@ -16,6 +16,7 @@ class Chef
       set_attrib :hostname,  :cmd_flag => '-h', :kind_of => String
       set_attrib :port,      :cmd_flag => '-P', :kind_of => String
       set_attrib :database,  :cmd_flag => '-d', :kind_of => String
+      set_attrib :timeout,   :cmd_flag => '-T', :kind_of => Integer
 
     end
   end
