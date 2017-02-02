@@ -9,6 +9,7 @@ class Chef
         super
         @cmd_name = "check-ram.rb"
         @local_files << {name: @cmd_name, source: "checks/#{@cmd_name}"}
+        @gems += [{name: "vmstat"}]
       end
 
       set_attrib :megabytes, :cmd_flag => '-m'
